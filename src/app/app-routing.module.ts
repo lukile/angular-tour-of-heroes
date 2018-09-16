@@ -13,6 +13,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  // Initialize rooter
   imports: [ RouterModule.forRoot(routes) ],
   exports: [ RouterModule ]
 })
