@@ -1,15 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Hero} from './hero';
+import {MessageService} from './message.service';
 
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import { Hero } from './hero';
-import { HEROES } from './mock-heroes';
-import { MessageService} from './message.service';
-
-import { HttpClient, HttpHeaders} from '@angular/common/http';
-
-import { catchError , tap, map } from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/internal/Observable';
+import {of} from 'rxjs/internal/observable/of';
 
 @Injectable()
 
