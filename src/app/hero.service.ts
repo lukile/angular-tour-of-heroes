@@ -36,7 +36,18 @@ export class HeroService {
     );
   }
 
-  updateHero(hero: Hero): Observable<Hero>{
+  addHero(hero: Hero): Observable<Hero> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+    return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
+      tap((hero: Hero) => this.log(`Add new hero with name=${hero.name}`)),
+      catchError(this.handleError<any>('add hero'))
+    );
+  }
+
+
+  updateHero(hero: Hero): Observable<Hero> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-type': 'application/json'})
     };
@@ -45,6 +56,21 @@ export class HeroService {
         tap(_ => this.log(`update hero id=${hero.id}`)),
         catchError(this.handleError<any>('update hero'))
       );
+  }
+
+  deleteHero(hero: Hero | number): Observable<Hero> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-type': 'application/json'})
+    };
+
+    const id = typeof hero === 'number' ? hero : hero.id;
+    const url = `${ this.heroesUrl } / ${ id }`;
+
+    return this.http.delete<Hero>(url, httpOptions).pipe(
+
+      tap(_ => this.log(`delete hero id=${id}`)),
+      catchError(this.handleError<Hero>('delete hero'))
+    );
   }
 
   private log(message: string) {
@@ -59,6 +85,18 @@ export class HeroService {
 
       return of(result as T);
     };
+  }
+
+  // Get heroes whose name contains "search term"
+  searchHeroes(term: string): Observable<Hero[]> {
+    if(!term.trim()) {
+      // Return empty array if search term not found
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl }/?name=${ term }`).pipe(
+      tap(_ => this.log(`found heroes matching "${ term }"`)),
+      catchError(this.handleError<Hero[]>('searchHeroes', []))
+    );
   }
 }
 
